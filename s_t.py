@@ -35,8 +35,9 @@ stt_button = Button(label=" Escuchar  🎤", width=300,  height=50)
 
 stt_button.js_on_event("button_click", CustomJS(code="""
     var recognition = new webkitSpeechRecognition();
-    recognition.continuous = true;
+    recognition.continuous = false;  // Cambia a false
     recognition.interimResults = true;
+    recognition.lang = 'es-ES';  // Puedes ajustar el idioma
  
     recognition.onresult = function (e) {
         var value = "";
@@ -49,8 +50,13 @@ stt_button.js_on_event("button_click", CustomJS(code="""
             document.dispatchEvent(new CustomEvent("GET_TEXT", {detail: value}));
         }
     }
+    
+    recognition.onend = function() {
+        console.log("Reconocimiento detenido");
+    }
+    
     recognition.start();
-    """))
+"""))
 
 result = streamlit_bokeh_events(
     stt_button,
@@ -175,9 +181,6 @@ if result:
                     print("Deleted ", f)
 
     remove_files(7)
-           
-
-
         
     
 
